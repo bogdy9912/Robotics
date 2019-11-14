@@ -4,7 +4,7 @@ const int buzzerOutPin = 10;
 const int buttonPin = 4;
 
 int buzzerValue = 0;
-int ledState = 0;
+int ledState = LOW;
 int buttonState = 1;
 const int threshold = 1;
 int currentTime = 0;
@@ -30,7 +30,7 @@ void loop() {
   {
     ok=1;
     Serial.println("A batut ");  
-    ledState = 1;
+    ledState = HIGH;
     timer=millis();
   }
     if ((millis()- timer) >= 5000 && ok == 1)
@@ -38,11 +38,11 @@ void loop() {
       
     buttonState = digitalRead(buttonPin);
     
-    if (buttonState == LOW && ok == 1);
+    if (buttonState == LOW && ok == 1)
       {
         noTone(buzzerOutPin);  
         ok=0;
-        ledState=0;
+        ledState=LOW;
       }
     digitalWrite(ledPin, ledState);
   }
