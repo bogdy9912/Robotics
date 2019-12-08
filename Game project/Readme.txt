@@ -10,8 +10,8 @@ The movement is being done with joysticks and a button to shoot projectiles
 
 Requirments:
 
-8x8 Matrix
-2 Joysticks
-2 Buttons
-1 LCD
-1 MAX7219 Driver
+1  8x8 Matrix
+2  Joysticks
+2  Buttons
+1  LCD
+1  MAX7219 Driver
