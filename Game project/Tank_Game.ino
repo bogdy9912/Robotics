@@ -5,18 +5,22 @@ const int pinSW = 8;
 const int pinX = A0;
 const int pinY = A1;
 
-const int pinSW2 = 4;
+const int pinSW2 = 7;
 const int pinX2 = A2;
 const int pinY2 = A3;
 
-typedef struct projectile {
-  int pozy;
-  int pozx;
-  double timp;
-} projectile;
+class projectile {
+  public:
+    int pozy;
+    int pozx;
+    double timp;
+
+};
 
 projectile man[8], man2[8];
 
+int GameOverVal;
+int level = 2;
 int SwState;
 int SwState2;
 int prevSwState = 1;
@@ -38,6 +42,7 @@ void setup() {
   lc.setIntensity(0, 2); // sets brightness (0~15 possible values)
   lc.clearDisplay(0);// clear screen
   pinMode(pinSW, INPUT_PULLUP);
+  pinMode(pinSW2, INPUT_PULLUP);
 }
 int i;
 int index;
@@ -117,7 +122,7 @@ void  playerOneMove() {
       lc.setLed(0, row, col, matrix[row][col]);
       row++;
       matrix[row][col] = 1;
-      matrixType[row][col] = 1;
+      matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]);
       // turns off LED at col, row
       ok = 1;
@@ -128,9 +133,11 @@ void  playerOneMove() {
     if (row > 0)
     {
       matrix[row][col] = 0;
+      matrixType[row][col] = 0;
       lc.setLed(0, row, col, matrix[row][col]);
       row--;
       matrix[row][col] = 1;
+      matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
       ok = 1;
     }
@@ -144,9 +151,11 @@ void  playerOneMove() {
     if (col < 3)
     {
       matrix[row][col] = 0;
+      matrixType[row][col] = 0;
       lc.setLed(0, row, col, matrix[row][col]);
       col++;
       matrix[row][col] = 1;
+      matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
 
       oky = 1;
@@ -157,9 +166,11 @@ void  playerOneMove() {
     if (col > 0)
     {
       matrix[row][col] = 0;
+      matrixType[row][col] = 0;
       lc.setLed(0, row, col, matrix[row][col]);
       col--;
       matrix[row][col] = 1;
+      matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
       oky = 1;
     }
@@ -282,26 +293,93 @@ void animationStart(int start) {
 }
 
 void animationGameOver() {
-  bool matrix[8][8] = {
-    {1, 0, 0, 0, 0, 0, 0, 1},
+  bool matrixNULL[8][8] = {
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 1, 1, 1, 1, 0},
-    {0, 1, 0, 0, 0, 0, 1, 0},
-    {1, 1, 0, 0, 0, 0, 1, 1}
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+
+  for (int row = 0; row < 8; row++)
+  {
+    for (int col = 0; col < 8; col++)
+    {
+      lc.setLed(0, row, col, matrixNULL[row][col]);
+    }
+  }
+  const bool GameOver1[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 1, 0, 0, 1, 0, 0, 1},
+    {0, 0, 1, 0, 0, 1, 1, 0},
+    {0, 0, 0, 1, 0, 1, 1, 0},
+    {0, 0, 1, 0, 1, 0, 0, 1},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
   };
   { for (int row = 0; row < 8; row++)
     {
       for (int col = 0; col < 8; col++)
       {
-        lc.setLed(0, row, col, matrix[row][col]);
+        lc.setLed(0, row, col, GameOver1[row][col]);
       }
     }
 
   }
+  GameOverVal = 1;
 }
+
+// 333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+
+
+void animationGameOver2() {
+  bool matrixNULL[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+
+  for (int row = 0; row < 8; row++)
+  {
+    for (int col = 0; col < 8; col++)
+    {
+      lc.setLed(0, row, col, matrixNULL[row][col]);
+    }
+  }
+  const bool GameOver2[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 0, 0, 1, 1, 0, 0, 0},
+    {0, 1, 1, 0, 0, 1, 0, 0},
+    {0, 1, 1, 0, 0, 0, 1, 0},
+    {1, 0, 0, 1, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+  for (int row = 0; row < 8; row++)
+  {
+    for (int col = 0; col < 8; col++)
+    {
+      lc.setLed(0, row, col, GameOver2[row][col]);
+    }
+  }
+
+
+  GameOverVal = 1;
+}
+
+//3333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+
+
 /*
   int shootFreq(int i) {
   if (millis() - aux[i] >= 2000) {
@@ -331,14 +409,15 @@ void getShootPositionsPlayerOne() {
 
 //===============================
 void getShootPositionsPlayerTwo() {
-  if (SwState2 == 0 && SwState2 != prevSwState2)
+  if (SwState2 == 0 && SwState2 != prevSwState2 && false )
   {
+    Serial.println("********************************");
     prevSwState2 = SwState2;
     if (man2[row2].pozx) {
 
     } else {
       man2[row2].pozx += 1;
-      man2[row2].pozy = col2 + 1;
+      man2[row2].pozy = col2 - 1;
       man2[row2].timp  = millis();
     }
   }
@@ -377,7 +456,7 @@ void realShoot2(int aux, projectile &ob) {
   if (millis() - ob.timp >= 200) {
     ob.timp = millis();
     ob.pozy--;
-    matrix[aux][ob.pozy - 1] = 0;
+    matrix[aux][ob.pozy + 1] = 0;
     lc.setLed(0, aux , ob.pozy + 1, matrix[aux][ob.pozy + 1]);
     if (hit(ob, aux))
       Serial.println("HIT");
@@ -391,6 +470,9 @@ void gameOver() {
   animationGameOver();
 }
 
+void gameOver2() {
+  animationGameOver2();
+}
 
 int hit(projectile &ob, int aux) {
   //  Serial.println(matrixType[aux][ob.pozy]);
@@ -400,10 +482,15 @@ int hit(projectile &ob, int aux) {
       if (matrixType[aux][ob.pozy] == 1)
         // if (ob.pozy == 7)
         gameOver();
-      if (ob.pozy < 7) {
-        //      Serial.println("DA");
-        ob.pozx -= 1;
-      }
+      if (matrixType[aux][ob.pozy == 2])
+        //        gameOver2();
+        if (ob.pozy < 7) {
+          if (matrixType[aux][ob.pozy] == 3) {
+            ob.pozx -= 1;
+          }
+          //      Serial.println("DA");
+          // sob.pozx -= 1;
+        }
       return 1;
     }
   }
@@ -411,7 +498,7 @@ int hit(projectile &ob, int aux) {
 }
 void shoot() {
   getShootPositionsPlayerOne();
-  //  getShootPositionsPlayerTwo();
+  getShootPositionsPlayerTwo();
 
 
   if (man[i].pozx) {
@@ -439,23 +526,116 @@ void shoot() {
     i = 0;
 
 }
+int move[5] ={0,1,2,3,4};
+int val = 2;
+int val2 = 5;
+
+void randomVal() {
+  val = random(1, 3);
+  val2 = random(4, 6);
+}
+long long put;
+
+void addObstacolGradOne() {
+  if (move[0] < 8)
+  { matrix[move[0]][val] = 1;
+    matrixType[move[0]][val] = 3;
+    matrix[move[0]][val2] = 1;
+    matrixType[move[0]][val2] = 3;
+    lc.setLed(0, move[0], val, true);
+    lc.setLed(0, move[0], val2, true);
+    if (millis() - put >= 400) {
+      put = millis();
+      move[0]++;
+      matrix[move[0] - 1][val] = 0;
+      matrixType[move[0] - 1][val] = 0;
+      lc.setLed(0, move[0] - 1, val, false);
+
+      matrix[move[0] - 1][val2] = 0;
+      matrixType[move[0] - 1][val2] = 0;
+      lc.setLed(0, move[0] - 1, val2 , false);
+    }
+  }
+  else
+  {
+    if (millis() - put >= 3000) {
+      put = millis();
+      randomVal();
+      move[0] = 0;
+    }
+  }
+}
+
+
+
+void addObstacolGradTwo() {
+  if (move[1] < 8)
+  { matrix[move[1]][val] = 1;
+    matrix[move[1] - 1][val] = 1;
+    matrixType[move[1]][val] = 3;
+    matrixType[move[1] - 1][val] = 3;
+    matrix[move[1]][val2] = 1;
+    matrix[move[1] - 1][val2] = 1;
+    matrixType[move[1]][val2] = 3;
+    matrixType[move[1] - 1][val2] = 3;
+    lc.setLed(0, move[1], val, true);
+    lc.setLed(0, move[1] - 1, val , true);
+    lc.setLed(0, move[1], val2, true);
+    lc.setLed(0, move[1] - 1, val2, true);
+    if (millis() - put >= 400) {
+      put = millis();
+      move[1]++;
+      matrix[move[1] - 1][val] = 0;
+      matrix[move[1] - 2][val] = 0;
+      matrixType[move[1] - 1][val] = 0;
+      matrixType[move[1] - 2][val] = 0;
+      lc.setLed(0, move[1] - 1, val, false);
+      lc.setLed(0, move[1] - 2, val, false);
+
+      matrix[move[1] - 1][val2] = 0;
+      matrix[move[1] - 2][val2] = 0;
+      matrixType[move[1] - 1][val2] = 0;
+      matrixType[move[1] - 2][val2] = 0;
+      lc.setLed(0, move[1] - 1, val2 , false);
+      lc.setLed(0, move[1] - 2, val2 , false);
+    }
+  }
+  else
+  {
+    if (millis() - put >= 3000) {
+      put = millis();
+      randomVal();
+      move[1] = 1;
+    }
+  }
+}
+
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //  if (GameOver == 0){}
-  SwState = digitalRead(pinSW);
-  SwState2 = digitalRead(pinSW2);
+  if (GameOverVal == 0) {
+    SwState = digitalRead(pinSW);
+    SwState2 = digitalRead(pinSW2);
 
-  Serial.println(SwState2);
-  //  animationStart(start);
-  //  playerOneFormOn(row, col);
-  playerTwoMove();
-  playerOneMove();
-  matrix[3][7] = 1;
-  lc.setLed(0, 3, 7, true);
-  matrix[2][5] = 1;
-  lc.setLed(0, 2, 5, true);
-  shoot();
+    Serial.println(SwState2);
+    //  animationStart(start);
+    //  playerOneFormOn(row, col);
+    playerTwoMove();
+    playerOneMove();
+    /*
+        matrix[3][7] = 1;
+      lc.setLed(0, 3, 7, true);
+      matrix[2][5] = 1;
+      lc.setLed(0, 2, 5, true);
+    */
+    shoot();
+    if (GameOverVal == 0)
+      if (level == 2) {
+        
+        addObstacolGradTwo();
+
+      }
+  }
   // Serial.println(matrix[3][7]);
   //Serial.println(man[row]);
   //Serial.println(row);
