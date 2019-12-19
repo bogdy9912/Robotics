@@ -20,7 +20,7 @@ class projectile {
 projectile man[8], man2[8];
 
 int GameOverVal;
-int level = 2;
+int level = 3;
 int SwState;
 int SwState2;
 int prevSwState = 1;
@@ -31,8 +31,8 @@ int xValue2 = 0;
 int yValue2 = 0;
 int k = 1;
 
-int thresholdMin = 400;
-int thresholdMax = 600;
+const int thresholdMin = 400;
+const int thresholdMax = 700;
 
 void setup() {
   // put your setup code here, to run once:
@@ -52,6 +52,17 @@ int row = 3;
 int col2 = 7;
 int row2;
 bool matrix[8][8] = {
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0}
+};
+
+bool matrixNULL[8][8] = {
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
@@ -105,6 +116,7 @@ int aux[8];
 void  playerOneMove() {
   xValue = analogRead(pinX);
   yValue = analogRead(pinY);
+  // Serial.println(xValue);
 
 
   if (xValue > thresholdMin && xValue < thresholdMax)
@@ -126,6 +138,21 @@ void  playerOneMove() {
       lc.setLed(0, row, col, matrix[row][col]);
       // turns off LED at col, row
       ok = 1;
+      /* Serial.print("LEFT");
+        Serial.println("row2");
+        Serial.println(row2);
+        Serial.println("col2");
+        Serial.println(col2);
+        Serial.println(ok2);
+        Serial.println("xValue");
+        Serial.println(xValue);
+        Serial.println("yValue");
+        Serial.println(yValue);
+        Serial.println("thresholdMin");
+        Serial.println(thresholdMin);
+        Serial.println("thresholdMax");
+        Serial.println(thresholdMax);*/
+      afis();
     }
   }
   else if (xValue < thresholdMin && ok == 0)
@@ -140,6 +167,21 @@ void  playerOneMove() {
       matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
       ok = 1;
+      /*   Serial.print("LEFT");
+         Serial.println("row2");
+         Serial.println(row2);
+         Serial.println("col2");
+         Serial.println(col2);
+         Serial.println(ok2);
+         Serial.println("xValue");
+         Serial.println(xValue);
+         Serial.println("yValue");
+         Serial.println(yValue);
+         Serial.println("thresholdMin");
+         Serial.println(thresholdMin);
+         Serial.println("thresholdMax");
+         Serial.println(thresholdMax);*/
+      afis();
     }
   }
 
@@ -159,6 +201,21 @@ void  playerOneMove() {
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
 
       oky = 1;
+      /*  Serial.print("LEFT");
+        Serial.println("row2");
+        Serial.println(row2);
+        Serial.println("col2");
+        Serial.println(col2);
+        Serial.println(ok2);
+        Serial.println("xValue");
+        Serial.println(xValue);
+        Serial.println("yValue");
+        Serial.println(yValue);
+        Serial.println("thresholdMin");
+        Serial.println(thresholdMin);
+        Serial.println("thresholdMax");
+        Serial.println(thresholdMax);*/
+      afis();
     }
   }
   else if (yValue < thresholdMin && oky == 0)
@@ -173,35 +230,25 @@ void  playerOneMove() {
       matrixType[row][col] = 2;
       lc.setLed(0, row, col, matrix[row][col]); // turns off LED at col, row
       oky = 1;
+      /*
+        Serial.print("LEFT");
+        Serial.println("row2");
+        Serial.println(row2);
+        Serial.println("col2");
+        Serial.println(col2);
+        Serial.println(ok2);
+        Serial.println("xValue");
+        Serial.println(xValue);
+        Serial.println("yValue");
+        Serial.println(yValue);
+        Serial.println("thresholdMin");
+        Serial.println(thresholdMin);
+        Serial.println("thresholdMax");
+        Serial.println(thresholdMax);*/
+      afis();
     }
   }
-  /*
-    if (row > 7)
-    {
-      row = 7;
-      matrix[row][col] = 1;
-      lc.setLed(0, col, row, matrix[row][col]); // turns off LED at col, row
-    }
-    if (row < 0)
-    {
-      row = 0;
-      matrix[row][col] = 1;
-      lc.setLed(0, col, row, matrix[row][col]); // turns off LED at col, row
-    }
 
-
-    if (col > 3)
-    {
-      col = 3;
-      matrix[row][col] = 1;
-      lc.setLed(0, col, row, matrix[row][col]); // turns off LED at col, row
-    }
-    if (col < 0)
-    {
-      col = 0;
-      matrix[row][col] = 1;
-      lc.setLed(0, col, row, matrix[row][col]); // turns off LED at col, row
-    }*/
 }
 
 
@@ -226,6 +273,24 @@ void  playerTwoMove() {
       matrix[row2][col2] = 1;
       lc.setLed(0, row2, col2, matrix[row2][col2]); // turns off LED at col, row
       ok2 = 1;
+      /*
+            Serial.print("LEFT");
+            Serial.println("row2");
+            Serial.println(row2);
+            Serial.println("col2");
+            Serial.println(col2);
+            Serial.println(ok2);
+            Serial.println("xValue");
+            Serial.println(xValue2);
+            Serial.println("yValue");
+            Serial.println(yValue2);
+            Serial.println("thresholdMin");
+            Serial.println(thresholdMin);
+            Serial.println("thresholdMax");
+            Serial.println(thresholdMax);
+            if (xValue2 > thresholdMax)
+              Serial.println("DAP");*/
+      afis();
     }
   }
   else if (xValue2 < thresholdMin && ok2 == 0)
@@ -240,6 +305,21 @@ void  playerTwoMove() {
       matrix[row2][col2] = 1;
       lc.setLed(0, row2, col2, matrix[row2][col2]); // turns off LED at col, row
       ok2 = 1;
+      /* Serial.println("RIGHT");
+        Serial.println("row2");
+        Serial.println(row2);
+        Serial.println("col2");
+        Serial.println(col2);
+        Serial.println(ok2);
+        Serial.println("xValue");
+        Serial.println(xValue2);
+        Serial.println("yValue");
+        Serial.println(yValue2);
+        Serial.println("thresholdMin");
+        Serial.println(thresholdMin);
+        Serial.println("thresholdMax");
+        Serial.println(thresholdMax);*/
+      afis();
     }
   }
 
@@ -259,7 +339,23 @@ void  playerTwoMove() {
       lc.setLed(0, row2, col2, matrix[row2][col2]); // turns off LED at col, row
 
       oky2 = 1;
+      /*
+            Serial.println("DOWN");
+            Serial.println("row2");
+            Serial.println(row2);
+            Serial.println("col2");
+            Serial.println(col2);
+            Serial.println(oky2);
+            Serial.println("xValue");
+            Serial.println(xValue2);
+            Serial.println("yValue");
+            Serial.println(yValue2);
+            Serial.println("thresholdMin");
+            Serial.println(thresholdMin);
+            Serial.println("thresholdMax");
+            Serial.println(thresholdMax);*/
     }
+    afis();
   }
   else if (yValue2 < thresholdMin && oky2 == 0)
   {
@@ -273,44 +369,85 @@ void  playerTwoMove() {
       matrix[row2][col2] = 1;
       lc.setLed(0, row2, col2, matrix[row2][col2]); // turns off LED at col, row
       oky2 = 1;
+      /*
+            Serial.println("UP");
+            Serial.println("row2");
+            Serial.println(row2);
+            Serial.println("col2");
+            Serial.println(col2);
+            Serial.println(oky2);
+            Serial.println("xValue");
+            Serial.println(xValue2);
+            Serial.println("yValue");
+            Serial.println(yValue2);
+            Serial.println("thresholdMin");
+            Serial.println(thresholdMin);
+            Serial.println("thresholdMax");
+            Serial.println(thresholdMax);*/
+      afis();
     }
   }
 
 }
 //--------------------------------------------------
 
-void animationStart(int start) {
+void setAnimationStart(bool matrice[8][8]) {
   if (start == 0)
   { for (int row = 0; row < 8; row++)
     {
       for (int col = 0; col < 8; col++)
       {
-        lc.setLed(0, row, col, matrix[row][col]);
+        lc.setLed(0, row, col, matrice[row][col]);
       }
     }
-    start = 1;
   }
 }
 
-void animationGameOver() {
-  bool matrixNULL[8][8] = {
+
+void animationStart() {
+  delay(500);
+  bool matrixOne[8][8] = {
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 1, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {0, 1, 0, 1, 0, 1, 0, 1},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0}
   };
+  bool matrixTwo[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 1, 0, 0, 0, 1},
+    {1, 1, 0, 1, 1, 1, 0, 1},
+    {1, 0, 1, 1, 1, 0, 1, 1},
+    {1, 0, 0, 1, 1, 0, 0, 1},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+  bool matrixZero[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 1, 1, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+  };
+  setAnimationStart(matrixTwo);
+  delay(800);
+  setAnimationStart(matrixOne);
+  delay(800);
+  setAnimationStart(matrixZero);
+  delay(800);
+  setAnimationStart(matrixNULL);
+}
+void animationGameOver() {
 
-  for (int row = 0; row < 8; row++)
-  {
-    for (int col = 0; col < 8; col++)
-    {
-      lc.setLed(0, row, col, matrixNULL[row][col]);
-    }
-  }
+
+  setAnimationStart(matrixNULL);
   const bool GameOver1[8][8] = {
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
@@ -334,19 +471,22 @@ void animationGameOver() {
 }
 
 // 333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-
+void afis() {
+  for (int row = 0; row < 8; row++)
+  {
+    for (int col = 0; col < 8; col++)
+    {
+      Serial.print(matrixType[col][row]);
+      Serial.print(" ");
+    }
+    Serial.println();
+  }
+  Serial.println();
+  Serial.println();
+}
 
 void animationGameOver2() {
-  bool matrixNULL[8][8] = {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0}
-  };
+
 
   for (int row = 0; row < 8; row++)
   {
@@ -409,9 +549,9 @@ void getShootPositionsPlayerOne() {
 
 //===============================
 void getShootPositionsPlayerTwo() {
-  if (SwState2 == 0 && SwState2 != prevSwState2 && false )
+  if (SwState2 == 0 && SwState2 != prevSwState2 )
   {
-    Serial.println("********************************");
+    //  Serial.println("********************************");
     prevSwState2 = SwState2;
     if (man2[row2].pozx) {
 
@@ -424,7 +564,23 @@ void getShootPositionsPlayerTwo() {
 }
 
 //===============================
+int checkBulletGhost = 0;
+/*
+  void reverseBullet(projectile &ob, int aux){
+  if (checkBulletGhost == 0){
+    projectile bulletGhost = ob;
+    }
+  ob.pozx -= 1;
+  bulletGhost.pozy -= 1;
+  if (bulletGhost <0)
+  bulletGhost.pozx = 0;
 
+
+
+  matrix[aux][ob.pozy] = 0;
+
+
+  }*/
 void realShootLaserPlayerOne(int aux) {
   for (int j = col; j < 8; j++)
     lc.setLed(0, aux, j, true);
@@ -436,14 +592,17 @@ int j;
 
 void realShoot(int aux, projectile &ob) {
   matrix[aux][ob.pozy] = 1;
+  matrixType[aux][ob.pozy] = 10;
   lc.setLed(0, aux, ob.pozy, matrix[aux][ob.pozy]);
   if (millis() - ob.timp >= 200) {
     ob.timp = millis();
     ob.pozy++;
     matrix[aux][ob.pozy - 1] = 0;
+    matrixType[aux][ob.pozy - 1] = 0;
     lc.setLed(0, aux , ob.pozy - 1, matrix[aux][ob.pozy - 1]);
     if (hit(ob, aux))
-      Serial.println("HIT");
+      // Serial.println("HIT");
+    {}
   }
 }
 
@@ -452,14 +611,16 @@ void realShoot(int aux, projectile &ob) {
 
 void realShoot2(int aux, projectile &ob) {
   matrix[aux][ob.pozy] = 1;
+  matrixType[aux][ob.pozy] = 10;
   lc.setLed(0, aux, ob.pozy, matrix[aux][ob.pozy]);
   if (millis() - ob.timp >= 200) {
     ob.timp = millis();
     ob.pozy--;
     matrix[aux][ob.pozy + 1] = 0;
+    matrixType[aux][ob.pozy + 1] = 0;
     lc.setLed(0, aux , ob.pozy + 1, matrix[aux][ob.pozy + 1]);
     if (hit(ob, aux))
-      Serial.println("HIT");
+    {}     // Serial.println("HIT");
   }
 }
 
@@ -482,15 +643,24 @@ int hit(projectile &ob, int aux) {
       if (matrixType[aux][ob.pozy] == 1)
         // if (ob.pozy == 7)
         gameOver();
-      if (matrixType[aux][ob.pozy == 2])
-        //        gameOver2();
-        if (ob.pozy < 7) {
-          if (matrixType[aux][ob.pozy] == 3) {
-            ob.pozx -= 1;
-          }
-          //      Serial.println("DA");
-          // sob.pozx -= 1;
+      if (matrixType[aux][ob.pozy] == 2)
+        gameOver2();
+      if (ob.pozy < 7) {
+        if (matrixType[aux][ob.pozy] == 3) {
+          // ob.pozx -= 1;
+          //Serial.println("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         }
+        if (matrixType[aux][ob.pozy] == 10) {
+          // ob.pozx -= 1;
+          //Serial.println("BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        }
+        if (matrixType[aux][ob.pozy] == 4) {}
+
+        //reverseBullet();
+
+        //      Serial.println("DA");
+        ob.pozx -= 1;
+      }
       return 1;
     }
   }
@@ -506,7 +676,7 @@ void shoot() {
     //realShootLaserPlayerOne(i);
     realShoot(i, man[i]);
 
-    if (man[i].pozy >= 8)
+    if (man[i].pozy > 7)
       man[i].pozx -= 1;
     prevSwState = 1;
 
@@ -515,18 +685,18 @@ void shoot() {
   if (man2[i].pozx) {
 
     realShoot2(i, man2[i]); //?
-    if (man2[i].pozy >= 8)
+    if (man2[i].pozy < 0)
       man2[i].pozx -= 1;
     prevSwState2 = 1;
 
 
   }
   i++;
-  if (i >= 8)
+  if (i > 7)
     i = 0;
 
 }
-int move[5] ={0,1,2,3,4};
+int move[5] = {0, 1, 2, 3, 4};
 int val = 2;
 int val2 = 5;
 
@@ -591,7 +761,48 @@ void addObstacolGradTwo() {
       matrixType[move[1] - 2][val] = 0;
       lc.setLed(0, move[1] - 1, val, false);
       lc.setLed(0, move[1] - 2, val, false);
+      matrix[move[1] - 1][val2] = 0;
+      matrix[move[1] - 2][val2] = 0;
+      matrixType[move[1] - 1][val2] = 0;
+      matrixType[move[1] - 2][val2] = 0;
+      lc.setLed(0, move[1] - 1, val2 , false);
+      lc.setLed(0, move[1] - 2, val2 , false);
+    }
+  }
+  else
+  {
+    if (millis() - put >= 3000) {
+      put = millis();
+      randomVal();
+      move[1] = 1;
+    }
+  }
+}
 
+
+void addObstacolGradThree() {
+  if (move[1] < 8)
+  { matrix[move[1]][val] = 1;
+    matrix[move[1] - 1][val] = 1;
+    matrixType[move[1]][val] = 4;
+    matrixType[move[1] - 1][val] = 4;
+    matrix[move[1]][val2] = 1;
+    matrix[move[1] - 1][val2] = 1;
+    matrixType[move[1]][val2] = 4;
+    matrixType[move[1] - 1][val2] = 4;
+    lc.setLed(0, move[1], val, true);
+    lc.setLed(0, move[1] - 1, val , true);
+    lc.setLed(0, move[1], val2, true);
+    lc.setLed(0, move[1] - 1, val2, true);
+    if (millis() - put >= 400) {
+      put = millis();
+      move[1]++;
+      matrix[move[1] - 1][val] = 0;
+      matrix[move[1] - 2][val] = 0;
+      matrixType[move[1] - 1][val] = 0;
+      matrixType[move[1] - 2][val] = 0;
+      lc.setLed(0, move[1] - 1, val, false);
+      lc.setLed(0, move[1] - 2, val, false);
       matrix[move[1] - 1][val2] = 0;
       matrix[move[1] - 2][val2] = 0;
       matrixType[move[1] - 1][val2] = 0;
@@ -617,7 +828,7 @@ void loop() {
     SwState = digitalRead(pinSW);
     SwState2 = digitalRead(pinSW2);
 
-    Serial.println(SwState2);
+
     //  animationStart(start);
     //  playerOneFormOn(row, col);
     playerTwoMove();
@@ -630,11 +841,31 @@ void loop() {
     */
     shoot();
     if (GameOverVal == 0)
-      if (level == 2) {
-        
-        addObstacolGradTwo();
+    { if (level == 2) {
+
+        addObstacolGradOne();
 
       }
+      if (level == 3)
+        addObstacolGradTwo();
+      if (level == 4)
+        addObstacolGradThree();
+    }
+
+  }
+  else {
+
+    xValue = analogRead(pinX);
+    xValue2 = analogRead(pinX2);
+    if (xValue < thresholdMin && xValue2 < thresholdMin )
+    { GameOverVal = 0;
+
+      animationStart();
+
+    }
+
+
+
   }
   // Serial.println(matrix[3][7]);
   //Serial.println(man[row]);
