@@ -1,6 +1,19 @@
 #include "LedControl.h" //  need the library
+#include "string.h"
 LedControl lc = LedControl(12, 11, 10, 1); //DIN, CLK, LOAD, No. DRIVER
 
+
+#include <LiquidCrystal.h>
+const int RS = 13;
+const int enable = 6;
+const int d4 = 5;
+const int d5 = 4;
+const int d6 = 3;
+const int d7 = 2;
+//const int Ve = 9; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LiquidCrystal lcd(RS, enable, d4, d5, d6, d7);
+
+int highHigh = 0;
 const int pinSW = 8;
 const int pinX = A0;
 const int pinY = A1;
@@ -19,6 +32,22 @@ class projectile {
 
 projectile man[8], man2[8];
 
+
+#include <IRremote.h>
+const int receiverPin = 9;
+IRrecv irrecv(receiverPin);
+decode_results results;
+unsigned long keyValue = 0;
+
+
+char *playersName[] {"BM", "Viezure", "Stefanita"};
+int highScoreValue[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+int startState = 0, highScoreState = 0, settingsState = 0;
+int indexMeniu = 0;
+int meniuState = 0;
+int indexHighScore = 0;
+int indexPlayerName = 0;
+int selectPlayerState = 0;
 int GameOverVal;
 int level = 3;
 int SwState;
@@ -34,16 +63,27 @@ int k = 1;
 const int thresholdMin = 400;
 const int thresholdMax = 700;
 
+
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  //  Serial.begin(9600);
   // the zero refers to the MAX7219 number, it is zero for 1 chip
   lc.shutdown(0, false); // turn off power saving, enables display
   lc.setIntensity(0, 2); // sets brightness (0~15 possible values)
   lc.clearDisplay(0);// clear screen
   pinMode(pinSW, INPUT_PULLUP);
   pinMode(pinSW2, INPUT_PULLUP);
+  lcd.begin(16, 2);
+  // pinMode(Ve, OUTPUT);
+  lcd.setCursor(3, 0);
+  lcd.print("WELCOME");
+  lcd.setCursor(3, 1);
+  //lcd.print("StarT");
+  irrecv.enableIRIn(); // configure the baud rate and start the IR receiver
+  irrecv.blink13(true); // blinks the LED everytime it receives a signal
 }
+
+
 int i;
 int index;
 //int man[8];
@@ -629,6 +669,7 @@ void realShoot2(int aux, projectile &ob) {
 
 void gameOver() {
   animationGameOver();
+
 }
 
 void gameOver2() {
@@ -642,9 +683,13 @@ int hit(projectile &ob, int aux) {
 
       if (matrixType[aux][ob.pozy] == 1)
         // if (ob.pozy == 7)
-        gameOver();
+      { gameOver();
+        highScoreValue[indexHighScore] += 1;
+      }
       if (matrixType[aux][ob.pozy] == 2)
-        gameOver2();
+      { gameOver2();
+        highScoreValue[indexHighScore] += 1;
+      }
       if (ob.pozy < 7) {
         if (matrixType[aux][ob.pozy] == 3) {
           // ob.pozx -= 1;
@@ -661,6 +706,7 @@ int hit(projectile &ob, int aux) {
         //      Serial.println("DA");
         ob.pozx -= 1;
       }
+
       return 1;
     }
   }
@@ -822,53 +868,252 @@ void addObstacolGradThree() {
 }
 
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  if (GameOverVal == 0) {
-    SwState = digitalRead(pinSW);
-    SwState2 = digitalRead(pinSW2);
+void infraredFunction() {
+  if (irrecv.decode(&results)) {
+    if (results.value == 0XFFFFFFFF)
+      results.value = keyValue;
+    switch (results.value) {
+      case 0xFFA25D:
+        //   Serial.println("CH-");
+        break;
+      case 0xFF629D:
+        { // Serial.println("CH");
+
+          meniuState++;
+          break;
+
+        }
+      case 0xFFE21D:
+        //Serial.println("CH+");
+        break;
+      case 0xFF22DD: {
+          // Serial.println("|<<");
+          if (selectPlayerState)
+          {
+            indexPlayerName --;
+            if (indexPlayerName < 0)
+              indexPlayerName = 7;
+          }
+
+        }
+        break;
+      case 0xFF02FD: {
+          //Serial.println(">>|");
+          if (selectPlayerState)
+          {
+            indexPlayerName ++;
+            if (indexPlayerName > 7)
+              indexPlayerName = 0;
+          }
+          break ;
+        }
+      case 0xFFC23D:
+        //Serial.println(">|");
+        break ;
+      case 0xFFE01F:
+        {
+          //Serial.println("-");
+          if (meniuState % 2 == 0)
+          {
+            if (indexMeniu > 0)
+              indexMeniu--;
+          }
+          else {
+            if (highScoreState)
+            {
+              if (indexHighScore > 0)
+              { indexHighScore--;
+                indexPlayerName--;
+              }
+            }
+          }
+
+          break ;
+        }
+      case 0xFFA857:
+        {
+          //Serial.println("+");
+          if (meniuState % 2 == 0) {
+            if (indexMeniu < 2)
+              indexMeniu++;
+          }
+          else {
+            if (highScoreState)
+            {
+              if (indexHighScore < 7)
+              { indexHighScore++;
+                indexPlayerName++;
+              }
+            }
+          }
 
 
-    //  animationStart(start);
-    //  playerOneFormOn(row, col);
-    playerTwoMove();
-    playerOneMove();
-    /*
-        matrix[3][7] = 1;
-      lc.setLed(0, 3, 7, true);
-      matrix[2][5] = 1;
-      lc.setLed(0, 2, 5, true);
-    */
-    shoot();
-    if (GameOverVal == 0)
-    { if (level == 2) {
+          break ;
+        }
+      case 0xFF906F:
+        //Serial.println("EQ");
+        break ;
+      case 0xFF6897:
+        ////Serial.println("0");
+        break ;
+      case 0xFF9867:
+        //Serial.println("100+");
+        break ;
+      case 0xFFB04F:
+        //Serial.println("200+");
+        break ;
+      case 0xFF30CF:
+        //Serial.println("1");
+        break ;
+      case 0xFF18E7:
+        //Serial.println("2");
+        break ;
+      case 0xFF7A85:
+        //Serial.println("3");
+        break ;
+      case 0xFF10EF:
+        //Serial.println("4");
+        break ;
+      case 0xFF38C7:
+        //Serial.println("5");
+        break ;
+      case 0xFF5AA5:
+        //Serial.println("6");
+        break ;
+      case 0xFF42BD:
+        //Serial.println("7");
+        break ;
+      case 0xFF4AB5:
+        //Serial.println("8");
+        break ;
+      case 0xFF52AD:
+        //Serial.println("9");
+        break ;
+    }
+    keyValue = results.value;
+    irrecv.resume();
+  }
+}
 
-        addObstacolGradOne();
+void selectPlayer() {
 
-      }
-      if (level == 3)
-        addObstacolGradTwo();
-      if (level == 4)
-        addObstacolGradThree();
+
+
+}
+
+
+
+void meniu() {
+  lcd.setCursor(3, 1);
+  if (meniuState % 2 == 0)
+  {
+    //  Serial.println(indexMeniu);
+    //  Serial.println(startState );
+    if (indexMeniu == 0 && startState == 0)
+    {
+      // Serial.println("NU");
+      // lcd.clear();
+      lcd.print("Start");
+      startState = 1;
+      highScoreState = 0;
+    }
+    if (indexMeniu == 1 && highScoreState == 0)
+    {
+      // lcd.clear();
+      //    Serial.println("ALTTTTTTTT");
+      lcd.setCursor(1, 1);
+      lcd.print("High Score");
+      highScoreState = 1;
+      
+      startState = 0;
+      settingsState = 0;
+    }
+    if (indexMeniu == 2 && settingsState == 0)
+    {
+      //  lcd.clear();
+      //  Serial.println("ctrl");
+      lcd.print("Settings");
+      settingsState = 1;
+      highScoreState = 0;
+    }
+  }
+  else
+  {
+    if (startState)
+    {
+
+
+      // pune loop ul  de game engine aici;
+    }
+    if (highScoreState)
+    {
+
+      //?
+      lcd.print(playersName[indexPlayerName]);
+      lcd.setCursor(3, 0);
+      lcd.print(highScoreValue[indexHighScore]);
     }
 
   }
-  else {
+
+}
+
+void checkHighScore()
+{
+  for (int i = 0; i <= 7; i++)
+    if (highHigh < highScoreValue[i])
+      highHigh = highScoreValue[i];
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+  infraredFunction();
+  // analogWrite(Ve, 70);
+  meniu();
+  
+
+     if (GameOverVal == 0) {
+       SwState = digitalRead(pinSW);
+       SwState2 = digitalRead(pinSW2);
+
+
+       //  animationStart(start);
+       //  playerOneFormOn(row, col);
+       playerTwoMove();
+       playerOneMove(); 
+  /*
+      matrix[3][7] = 1;
+    lc.setLed(0, 3, 7, true);
+    matrix[2][5] = 1;
+    lc.setLed(0, 2, 5, true);
+  */
+   shoot();
+    if (GameOverVal == 0)
+    { if (level == 2) {
+
+       addObstacolGradOne();
+
+     }
+     if (level == 3)
+       addObstacolGradTwo();
+     if (level == 4)
+       addObstacolGradThree();
+    }
+
+    }
+    else {
 
     xValue = analogRead(pinX);
     xValue2 = analogRead(pinX2);
     if (xValue < thresholdMin && xValue2 < thresholdMin )
-    { GameOverVal = 0;
+    {
 
-      animationStart();
-
+     GameOverVal = 0;
+     animationStart();
+    }
     }
 
 
-
-  }
-  // Serial.println(matrix[3][7]);
-  //Serial.println(man[row]);
-  //Serial.println(row);
-  //  if (millis() - aux[] >= 200)
 }
